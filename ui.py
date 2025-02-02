@@ -36,8 +36,8 @@ class MainTableFrame(Frame):
         self.yscroll.pack(side=RIGHT, fill=Y)
         self.tree.pack(fill=BOTH, expand=1)
 
-    def pack(self, *cnf, **kw):
-        super().pack(*cnf, **kw)
+    def pack(self, cnf={}, **kw):
+        super().pack(cnf, **kw)
         self.pack_children()
 
 
@@ -70,7 +70,7 @@ class StateFrame(Frame):
 
     def create_login_button(self):
         button = Button(self)
-        button.config(text="登录")
+        button.config(text="登录",width=4)
         return button
 
     def pack_children(self):
@@ -99,13 +99,15 @@ class EntryFrame(Frame):
         return entry
 
     def create_check_button(self):
-        button = Button(self, text="检查")
+        button = Button(self, text="检查",width=4)
         return button
 
     def grid_children(self):
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_columnconfigure(1, weight=1)
         self.entry.grid(row=1, column=0, padx=8, pady=3, ipadx=5, ipady=3, sticky=N + W + S + E)
-        self.check_button.grid(row=1, column=1, padx=8, pady=3, ipadx=5, ipady=3, sticky=E)
-        self.tips_label.grid(row=0, column=0, rowspan=1, padx=8, pady=3, ipadx=5, ipady=3, sticky=W)
+        self.check_button.grid(row=1, column=1, padx=8, pady=3, ipadx=5, ipady=3, sticky=W+E)
+        self.tips_label.grid(row=0, column=0, rowspan=1, padx=8, pady=3, ipadx=5, ipady=3, sticky=W+E)
 
     def pack(self, cnf={}, **kw):
         super().pack(cnf, **kw)
@@ -121,9 +123,19 @@ class SecondTableFrame(Frame):
         # columns = {"图片文件夹名称": 120, "路径": 319}
         tk_table = Treeview(self, show="headings", columns="清晰度")
 
-        tk_table.column("清晰度", anchor="center", stretch=True,width=10)
+        tk_table.column("清晰度", anchor="center", stretch=True,width=70)
         tk_table.heading("清晰度", text="清晰度", anchor=CENTER)
 
+        tk_table.insert("", "end", text="8K 超高清", values=["8K 超高清"])
+        tk_table.insert("", "end", text="4K 超清", values=["4K 超清"])
+        tk_table.insert("", "end", text="1080P 高码率", values=["1080P 高码率"])
+        tk_table.insert("", "end", text="1080P 60帧", values=["1080P 60帧"])
+        tk_table.insert("", "end", text="1080P 高清", values=["1080P 高清"])
+        tk_table.insert("", "end", text="720P 高清", values=["720P 高清"])
+        tk_table.insert("", "end", text="480P 清晰", values=["480P 清晰"])
+        tk_table.insert("", "end", text="360P 流畅", values=["360P 流畅"])
+
+        tk_table.config(height=8)
 
         return tk_table
 
@@ -147,17 +159,17 @@ class PriorityFrame(Frame):
         return table_frame
 
     def create_up_button(self):
-        button = Button(self, text="上移")
+        button = Button(self, text="🔼",width=2)
         return button
 
     def create_down_button(self):
-        button = Button(self, text="下移")
+        button = Button(self, text="🔽",width=2)
         return button
 
     def pack_children(self):
-        self.table_frame.pack(side=LEFT, fill=BOTH, expand=1)
-        self.up_button.pack(side=TOP, padx=8, pady=3, ipadx=5, ipady=3, anchor=N, expand=1)
-        self.down_button.pack(side=BOTTOM, padx=8, pady=3, ipadx=5, ipady=3, expand=1, anchor=S)
+        self.table_frame.pack(side=LEFT, fill=BOTH)
+        self.up_button.pack(side=TOP, padx=8, pady=3, ipadx=5, ipady=3, anchor=N)
+        self.down_button.pack(side=BOTTOM, padx=8, pady=3, ipadx=5, ipady=3, anchor=S)
 
     def pack(self, cnf={}, **kw):
         super().pack(cnf, **kw)
@@ -179,8 +191,8 @@ class CheckbuttonsFrame(Frame):
         return button
 
     def pack_children(self):
-        self.check_danmu_button.pack(side=TOP, padx=8, pady=8, ipadx=5, ipady=3, anchor=W, expand=1)
-        self.check_audio_button.pack(side=TOP, padx=8, pady=8, ipadx=5, ipady=3, anchor=W, expand=1)
+        self.check_danmu_button.pack(side=TOP, padx=8, pady=6, ipadx=5, ipady=3, anchor=W, expand=1)
+        self.check_audio_button.pack(side=TOP, padx=8, pady=10, ipadx=5, ipady=3, anchor=W, expand=1)
 
     def pack(self, cnf={}, **kw):
         super().pack(cnf, **kw)
@@ -217,11 +229,11 @@ class ExceptTableFrame(Frame):
         return frame
 
     def pack_children(self):
-        self.start_button_frame.pack(side=TOP, fill=X, expand=1)
-        self.state_frame.pack(side=TOP, fill=X, expand=1)
-        self.entry_frame.pack(side=TOP, fill=X, expand=1)
-        self.priority_frame.pack(side=TOP, fill=X, expand=1)
-        self.checkbuttons_frame.pack(side=TOP, fill=X, expand=1)
+        self.start_button_frame.pack(side=TOP, fill=Y, expand=1)
+        self.state_frame.pack(side=TOP, fill=Y)
+        self.entry_frame.pack(side=TOP, fill=Y)
+        self.priority_frame.pack(side=TOP, fill=Y,anchor=W)
+        self.checkbuttons_frame.pack(side=TOP, fill=Y,anchor=W)
 
     def pack(self, cnf={}, **kw):
         super().pack(cnf, **kw)
@@ -238,7 +250,7 @@ class WinGUI(Tk):
     def __win(self):
         self.title("微信自动添加表情包助手")
         # self.geometry("700x600")
-        # self.minsize(800, 800)
+        self.minsize(600, 450)
         # self.iconbitmap("icon.ico")
         # self.resizable(width=False, height=False)
 
@@ -249,7 +261,7 @@ class WinGUI(Tk):
 
     def __except_table_frame(self):
         except_table_frame = ExceptTableFrame(self)
-        except_table_frame.pack(side=RIGHT, fill=Y)
+        except_table_frame.pack(side=RIGHT,fill=Y)
         return except_table_frame
 
 
